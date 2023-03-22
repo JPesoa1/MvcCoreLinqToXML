@@ -12,7 +12,7 @@ namespace MvcCoreLinqToXML.Repositories
         public RepositoryXML(HelperPathProvider helper)
         {
             this.helper = helper;
-             pathClientes = this.helper.MapPath("ClientesID.xml", Folders.Documents);
+            pathClientes = this.helper.MapPath("ClientesID.xml", Folders.Documents);
             documentClientes = XDocument.Load(pathClientes);
         }
 
@@ -56,10 +56,10 @@ namespace MvcCoreLinqToXML.Repositories
                 cliente.Nombre = tag.Element("NOMBRE").Value;
                 cliente.Direccion = tag.Element("DIRECCION").Value;
                 cliente.Email = tag.Element("EMAIL").Value;
-                cliente.ImagenCliente= tag.Element("IMAGENCLIENTE").Value;
+                cliente.ImagenCliente = tag.Element("IMAGENCLIENTE").Value;
 
                 clientes.Add(cliente);
-                
+
             }
             return clientes;
         }
@@ -103,6 +103,36 @@ namespace MvcCoreLinqToXML.Repositories
             clienteXML.Remove();
 
             this.documentClientes.Save(this.pathClientes);
+        }
+
+        public void UpdateCliente
+            (int idcliente, string nombre, string email, string direccion, string imagen)
+        {
+
+            XElement tag = this.FindXmlCliente(idcliente.ToString());
+            Cliente cliente = new Cliente();
+            idcliente = int.Parse(tag.Element("IDCLIENTE").Value);
+            tag.Element("NOMBRE").Value = nombre;
+            tag.Element("DIRECCION").Value = direccion;
+            tag.Element("EMAIL").Value = email;
+            tag.Element("IMAGENCLIENTE").Value = imagen;
+            this.documentClientes.Save(this.pathClientes);
+
+        }
+
+        public void CreateCliente
+            (int idcliente, string nombre, string email, string direccion, string imagen)
+        {
+            XElement rootCliente = new XElement("CLIENTE");
+            rootCliente.Add(new XElement("IDCLIENTE",idcliente));    
+            rootCliente.Add(new XElement("NOMBRE",nombre));    
+            rootCliente.Add(new XElement("DIRECCION",direccion));    
+            rootCliente.Add(new XElement("EMAIL",email));    
+            rootCliente.Add(new XElement("IMAGENCLIENTE",imagen));
+
+            this.documentClientes.Element("CLIENTES").Add(rootCliente);
+            this.documentClientes.Save(this.pathClientes);
+
         }
 
     }
