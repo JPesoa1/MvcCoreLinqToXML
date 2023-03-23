@@ -135,5 +135,59 @@ namespace MvcCoreLinqToXML.Repositories
 
         }
 
+
+
+
+        public List<Pelicula> GetPeliculas()
+        {
+            string path = helper.MapPath("peliculas.xml", Folders.Documents);
+
+            XDocument document = XDocument.Load(path);
+            List<Pelicula> peliculas = new List<Pelicula>();
+            var consulta = from datos in document.Descendants("pelicula")
+                           select datos;
+
+            foreach (XElement tag in consulta)
+            {
+                Pelicula pelicula = new Pelicula();
+
+                pelicula.Idpelicula= int.Parse(tag.Attribute("idpelicula").Value);
+                pelicula.Titulo= tag.Element("titulo").Value;
+                pelicula.TituloOriginal = tag.Element("titulooriginal").Value;
+                pelicula.Descripcion= tag.Element("descripcion").Value;
+                pelicula.Poster= tag.Element("poster").Value;
+
+                peliculas.Add(pelicula);
+
+            }
+            return peliculas;
+        }
+
+        public List<EscenasPeliculas> GetEscenasPeliculas(int id)
+        {
+            string path = helper.MapPath("escenaspeliculas.xml", Folders.Documents);
+
+            XDocument document = XDocument.Load(path);
+            List<EscenasPeliculas> peliculas = new List<EscenasPeliculas>();
+            var consulta = from datos in document.Descendants("escena")
+                           where datos.Attribute("idpelicula").Value == id.ToString()
+                           select datos;
+
+            foreach (XElement tag in consulta)
+            {
+                EscenasPeliculas escenasPeliculas = new EscenasPeliculas();
+
+                escenasPeliculas.Idpelicula = int.Parse(tag.Attribute("idpelicula").Value);
+                escenasPeliculas.TituloEscena= tag.Element("tituloescena").Value;
+                escenasPeliculas.Descripcion = tag.Element("descripcion").Value;
+                escenasPeliculas.Imagen = tag.Element("imagen").Value;
+    
+
+                peliculas.Add(escenasPeliculas);
+
+            }
+            return peliculas;
+        }
+
     }
 }

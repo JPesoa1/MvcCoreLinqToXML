@@ -1,0 +1,11 @@
+﻿@model List<EscenasPeliculas>
+
+
+
+@foreach (EscenasPeliculas escenas in Model)
+{
+    <h1>Titulo : @escenas.TituloEscena</h1>
+    <p>Descripcion : @escenas.Descripcion</p>
+    <img style="width:200px;height:200px" src="@escenas.Imagen" alt="@escenas.TituloEscena"/>
+    <hr/>
+}
